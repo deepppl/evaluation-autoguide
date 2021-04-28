@@ -1,0 +1,5 @@
+-e git+https://github.com/deepppl/stan-num-pyro/#egg=stan-numpyro&subdirectory=stan-numpyro --install-option="--src _pip"
+-e git+https://github.com/deepppl/stan-num-pyro/#egg=stan-pyro&subdirectory=stan-pyro --install-option="--src _pip"
+cmdstanpy
+numpy
+pandas
