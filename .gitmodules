@@ -1,0 +1,3 @@
+[submodule "posteriordb"]
+	path = posteriordb
+	url = git@github.com:stan-dev/posteriordb.git
