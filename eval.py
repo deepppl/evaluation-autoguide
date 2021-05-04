@@ -42,9 +42,9 @@ def run_svi(*, posterior, backend, mode, Autoguide, num_steps, num_samples):
     numpyro_model = NumPyroModel(stanfile, recompile=False, build_dir=build_dir)
     optim = Adam(step_size=0.0005)
     loss = Trace_ELBO()
-    guide = Autoguide(numpyro_model.module.model)
+    guide = Autoguide(numpyro_model.get_model())
     svi = numpyro_model.svi(optim, loss, guide)
-    svi.run(jax.random.PRNGKey(0), num_steps, num_samples, data)
+    svi.run(jax.random.PRNGKey(0), data, num_steps=num_steps, num_samples=num_samples)
     return svi
 
 
@@ -78,16 +78,16 @@ def compare(*, posterior, backend, mode, Autoguide, num_steps, num_samples, logf
     sm = sm[["mean", "std", "n_eff"]]
     sm["err"] = abs(sm["mean"] - sg["mean"])
     sm["rel_err"] = sm["err"] / sg["std"]
-    if len(sm.dropna()) != len(sg):
+    if len(sm["mean"].dropna()) != len(sg):
         raise RuntimeError("Missing parameter")
     # perf_cmdstan condition: err > 0.0001 and (err / stdev) > 0.3
     comp = sm[(sm["err"] > 0.0001) & (sm["rel_err"] > 0.3)].dropna()
     if not comp.empty:
         logger.error(f"Failed {posterior.name}")
-        print(f"{name},mismatch,{sm['n_eff'].mean()}", file=logfile, flush=True)
+        print(f"{name},mismatch,{sm['rel_err'].max()},{sm['n_eff'].mean()}", file=logfile, flush=True)
     else:
         logger.info(f"Success {posterior.name}")
-        print(f"{name},success,{sm['n_eff'].mean()}", file=logfile, flush=True)
+        print(f"{name},success,{sm['rel_err'].max()},{sm['n_eff'].mean()}", file=logfile, flush=True)
 
 
 if __name__ == "__main__":
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         logpath += f"_{args.guide}"
     logpath += f"_{today.strftime('%y%m%d_%H%M%S')}.csv"
     with open(logpath, "a") as logfile:
-        print(",status,n_eff,exception", file=logfile, flush=True)
+        print(",status,rel_err,n_eff,exception", file=logfile, flush=True)
         for name in (n for n in golds):
             # Configurations
             posterior = get_posterior(name)
@@ -173,4 +173,4 @@ if __name__ == "__main__":
                 err = " ".join(traceback.format_exception_only(exc_type, exc_value))
                 err = re.sub(r"[\n\r\",]", " ", err)[:150] + "..."
                 logger.error(f"Failed {name} with {err}")
-                print(f'{name},error,,"{err}"', file=logfile, flush=True)
+                print(f'{name},error,,,"{err}"', file=logfile, flush=True)
