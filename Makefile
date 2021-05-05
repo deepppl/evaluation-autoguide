@@ -27,7 +27,7 @@ eval:
 	python eval.py --backend stan --mode meanfield
 	python eval.py --backend stan --mode fullrank
 
-scaled:
+test:
 	python eval.py --backend numpyro --mode comprehensive --test
 
 clean:
