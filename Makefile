@@ -2,7 +2,7 @@ help:
 	@echo "Help:"
 	@echo "  make init         # install the dependencies"
 	@echo "  make eval         # run the full evaluation"
-	@echo "  make scaled       # run a lighter version of the evaluation"
+	@echo "  make test         # test the evaluation scripts"
 	@echo "  make clean        # remove the generated files excpet the logs"
 	@echo "  make cleanall     # remove all the generated files"
 
