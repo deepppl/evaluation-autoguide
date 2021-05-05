@@ -75,19 +75,20 @@ def compare(*, posterior, backend, mode, Autoguide, num_steps, num_samples, logf
             num_samples=num_samples,
         )
         sm = svi.summary()
-    sm = sm[["mean", "std", "n_eff"]]
-    sm["err"] = abs(sm["mean"] - sg["mean"])
-    sm["rel_err"] = sm["err"] / sg["std"]
     if not set(sg.index).issubset(set(sm.index)):
         raise RuntimeError("Missing parameter")
     # perf_cmdstan condition: err > 0.0001 and (err / stdev) > 0.3
+    sm = sm.loc[sg.index]
+    sm = sm[["mean", "std", "n_eff"]]
+    sm["err"] = abs(sm["mean"] - sg["mean"])
+    sm["rel_err"] = sm["err"] / sg["std"]
     comp = sm[(sm["err"] > 0.0001) & (sm["rel_err"] > 0.3)].dropna()
     if not comp.empty:
         logger.error(f"Failed {posterior.name}")
-        print(f"{name},mismatch,{sm['rel_err'].max()},{sm['n_eff'].mean()}", file=logfile, flush=True)
+        print(f"{name},mismatch,{sm['rel_err'].max(skipna=False)},{sm['n_eff'].mean(skipna=False)}", file=logfile, flush=True)
     else:
         logger.info(f"Success {posterior.name}")
-        print(f"{name},success,{sm['rel_err'].max()},{sm['n_eff'].mean()}", file=logfile, flush=True)
+        print(f"{name},success,{sm['rel_err'].max(skipna=False)},{sm['n_eff'].mean(skipna=False)}", file=logfile, flush=True)
 
 
 if __name__ == "__main__":
