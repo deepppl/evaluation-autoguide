@@ -2,7 +2,7 @@
 
 Launch the evaluation with:
 ```
-$ python eval.py --help                                                                                    
+$ python eval.py --help
 usage: eval.py [-h] --backend BACKEND --mode MODE [--test] [--posteriors POSTERIORS [POSTERIORS ...]] [--guide GUIDE] [--steps STEPS] [--samples SAMPLES]
 
 Run autoguide accuracy experiment on PosteriorDB models.

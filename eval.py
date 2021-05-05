@@ -97,7 +97,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--backend",
-        help="inference backend (pyro, numpyro, or stan)",
+        help="inference backend (numpyro, or stan)",
         required=True,
     )
     parser.add_argument(
