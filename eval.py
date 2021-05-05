@@ -78,7 +78,7 @@ def compare(*, posterior, backend, mode, Autoguide, num_steps, num_samples, logf
     sm = sm[["mean", "std", "n_eff"]]
     sm["err"] = abs(sm["mean"] - sg["mean"])
     sm["rel_err"] = sm["err"] / sg["std"]
-    if len(sm["mean"].dropna()) != len(sg):
+    if not set(sg.index).issubset(set(sm.index)):
         raise RuntimeError("Missing parameter")
     # perf_cmdstan condition: err > 0.0001 and (err / stdev) > 0.3
     comp = sm[(sm["err"] > 0.0001) & (sm["rel_err"] > 0.3)].dropna()
