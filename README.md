@@ -3,7 +3,7 @@
 This project evaluates [NumPyro autoguides](http://num.pyro.ai/en/stable/autoguide.html) for variational inference on Stan models using [PosteriorDB](https://github.com/stan-dev/posteriordb).
 It relies on the fork of the Stanc3 compiler available at https://github.com/deepppl/stanc3 to compile the Stan programs to NumPyro.
 
-The results are summarized in the paper [`stan-numpyro-autoguides.pdf`](https://github.com/deepppl/evaluation-autoguide).
+The results are summarized in the paper [`stan-numpyro-autoguides.pdf`](https://github.com/deepppl/evaluation-autoguide/blob/main/stan-numpyro-autoguides.pdf).
 
 ## Getting Started
 
