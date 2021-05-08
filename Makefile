@@ -8,24 +8,24 @@ help:
 
 .PHONY: help scaled eval clean cleanall
 
-
 init:
 	git submodule init && git submodule update
 	pip install ./posteriordb/python
 	opam pin -y -k git git+https://github.com/deepppl/stanc3.git
 	pip install -r requirements.txt
 
-eval:
-	python eval.py --backend numpyro --mode comprehensive --guide AutoBNAFNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoDiagonalNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoMultivariateNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoIAFNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoLaplaceApproximation
-	python eval.py --backend numpyro --mode comprehensive --guide AutoLowRankMultivariateNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoNormal
-	python eval.py --backend numpyro --mode comprehensive --guide AutoDelta
+eval: 	eval-AutoBNAFNormal eval-AutoDiagonalNormal \
+	eval-AutoMultivariateNormal eval-AutoIAFNormal \
+	eval-AutoLaplaceApproximation eval-AutoLowRankMultivariateNormal \
+	eval-AutoNormal eval-AutoDelta \
+	eval-stan
+
+eval-stan:
 	python eval.py --backend stan --mode meanfield
 	python eval.py --backend stan --mode fullrank
+
+eval-%:
+	python eval.py --backend numpyro --mode comprehensive --guide $(@:eval-%=%)
 
 test:
 	python eval.py --backend numpyro --mode comprehensive --test
